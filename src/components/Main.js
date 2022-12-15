@@ -3,9 +3,6 @@ import { Route, Link, Routes } from "react-router-dom";
 import Dashboard from "./Dashboard";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
-// import dotenv from "dotenv";
-
-// dotenv.config();
 
 const Main = () => {
   return (
