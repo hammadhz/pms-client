@@ -1,1 +1,1 @@
-export const SERVER_URL = `https://${process.env.REACT_APP_PORT}`;
+export const SERVER_URL = process.env.REACT_APP_SERVER_URL;
