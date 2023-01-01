@@ -1,12 +1,9 @@
-import React from "react";
-import { Main } from "./components";
+import { routes } from "./routes";
+import { useRoutes } from "react-router-dom";
 
 function App() {
-  return (
-    <React.Fragment>
-      <Main />
-    </React.Fragment>
-  );
+  const content = useRoutes(routes);
+  return content;
 }
 
 export default App;

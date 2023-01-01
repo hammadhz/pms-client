@@ -7,9 +7,9 @@ import {
   faCircleCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link, useNavigate } from "react-router-dom";
-import axiosInstance from "../utils/axiosInstance";
+import axiosInstance from "../../utils/axiosInstance";
 import { FcGoogle } from "react-icons/fc";
-import { SERVER_URL } from "../constants/ServerUrl";
+import { SERVER_URL } from "../../constants/ServerUrl";
 
 const SignIn = () => {
   const [signinUser, setSigninUser] = useState({
@@ -43,7 +43,7 @@ const SignIn = () => {
       .catch((err) => {
         setErrorMsg(err.response.data);
         setSuccessMsg("");
-        navigate("/");
+        navigate("/signin");
       });
     setSigninUser({
       email: "",

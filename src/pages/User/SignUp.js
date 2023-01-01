@@ -9,8 +9,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
-import axiosInstance from "../utils/axiosInstance";
-import { SERVER_URL } from "../constants/ServerUrl";
+import axiosInstance from "../../utils/axiosInstance";
+import { SERVER_URL } from "../../constants/ServerUrl";
 
 const SignUp = () => {
   const [signupUser, setSignupUser] = useState({
