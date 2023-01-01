@@ -32,7 +32,7 @@ const SUserLayout = ({ children }) => {
         <div className="flex-grow flex flex-col justify-between text-gray-500 bg-gray-800">
           <nav className="flex flex-col mx-4 my-6 space-y-4">
             <Link
-              href="/spuser/dashboard"
+              to="/spuser/dashboard"
               className="inline-flex items-center justify-center py-3 text-purple-600 bg-white rounded-lg"
             >
               <span className="sr-only">Dashboard</span>
@@ -52,7 +52,7 @@ const SUserLayout = ({ children }) => {
               </svg>
             </Link>
             <Link
-              href="/spuser/dashboard/media"
+              to="/spuser/dashboard/media"
               className="inline-flex items-center justify-center py-3 hover:text-gray-400 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 rounded-lg"
             >
               <span className="sr-only">Documents</span>
@@ -72,7 +72,7 @@ const SUserLayout = ({ children }) => {
               </svg>
             </Link>
             <Link
-              href="/spuser/dashboard/profile"
+              to="/spuser/dashboard/profile"
               className="inline-flex items-center justify-center py-3 hover:text-gray-400 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 rounded-lg"
             >
               <span className="sr-only">Profile</span>
