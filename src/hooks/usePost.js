@@ -8,7 +8,6 @@ const usePost = () => {
     await axiosInstance
       .post(url, data)
       .then((res) => {
-        console.log(res.data);
         toast.success(res.data.message, {
           position: "bottom-center",
           autoClose: 2000,
@@ -23,7 +22,6 @@ const usePost = () => {
         dispatch({ type: actionType, payload: res.data });
       })
       .catch((err) => {
-        console.log(err);
         toast.error(err.response.data, {
           position: "bottom-center",
           autoClose: 2000,
