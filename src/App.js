@@ -1,8 +1,10 @@
 import { routes } from "./routes";
 import { useRoutes } from "react-router-dom";
+import { useAuthContext } from "./hooks";
 
 function App() {
-  const content = useRoutes(routes);
+  const { state } = useAuthContext();
+  const content = useRoutes(routes(state.user));
   return content;
 }
 

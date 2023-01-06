@@ -1,44 +1,45 @@
-import React, { useEffect, useState } from "react";
-import axiosInstance from "../../utils/axiosInstance";
+import React, { useEffect } from "react";
+import { useAuthContext, useGet } from "../../hooks";
 
 const Users = () => {
-  const [getUsers, setGetUsers] = useState([]);
+  const { state } = useAuthContext();
+  const { getData } = useGet();
   useEffect(() => {
-    axiosInstance
-      .get("/admin/users")
-      .then((res) => {
-        setGetUsers(res.data);
-      })
-      .catch((err) => console.log(err));
+    const showData = async () => {
+      return await getData("/admin/users", "GET_SPECIAL_USER");
+    };
+    showData();
   }, []);
-
+  const userData = state.specialUser.filter(
+    (data) => data.role === "special user"
+  );
   return (
     <div className="">
       <div id="last-users">
         <h1 className="font-bold py-4 uppercase">Users</h1>
-        {getUsers?.map((data) => {
-          return (
-            <div className="overflow-x-scroll" key={data._id}>
-              <table className="w-full whitespace-nowrap">
-                <thead className="bg-black/60">
-                  <tr>
-                    <th className="text-left py-3 px-2 rounded-l-lg">Name</th>
-                    <th className="text-left py-3 px-2">Email</th>
-                    <th className="text-left py-3 px-2">Group</th>
-                    <th className="text-left py-3 px-2">Status</th>
-                    <th className="text-left py-3 px-2 rounded-r-lg">
-                      Actions
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr className="border-b border-gray-700">
+        <div className="overflow-x-scroll">
+          <table className="w-full whitespace-nowrap">
+            <thead className="bg-black/60">
+              <tr>
+                <th className="text-left py-3 px-2 rounded-l-lg">Name</th>
+                <th className="text-left py-3 px-2">Email</th>
+                <th className="text-left py-3 px-2">Role</th>
+                <th className="text-left py-3 px-2">Group</th>
+                <th className="text-left py-3 px-2">Status</th>
+                <th className="text-left py-3 px-2 rounded-r-lg">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {userData?.map((data) => {
+                return (
+                  <tr className="border-b border-gray-700" key={data._id}>
                     <td className="py-3 px-2 font-bold">
                       <div className="inline-flex space-x-3 items-center">
-                        <span>{data.fullName}</span>
+                        <span>{data.name}</span>
                       </div>
                     </td>
                     <td className="py-3 px-2">{data.email}</td>
+                    <td className="py-3 px-2">{data.role}</td>
                     <td className="py-3 px-2">{data.password}</td>
                     <td className="py-3 px-2">
                       {data.verified ? "Approved" : "Not Approved"}
@@ -104,11 +105,11 @@ const Users = () => {
                       </div>
                     </td>
                   </tr>
-                </tbody>
-              </table>
-            </div>
-          );
-        })}
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );

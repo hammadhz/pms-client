@@ -1,15 +1,19 @@
-import React, { useState, useContext } from "react";
-import axiosInstance from "../../utils/axiosInstance";
-import { User } from "../../Context/Context";
-import { Slide, ToastContainer, toast } from "react-toastify";
+import React, { useState } from "react";
+import { useAuthContext, usePost } from "../../hooks";
+import { ToastContainer } from "react-toastify";
 
 const Profile = () => {
   const [about, setAbout] = useState({
     about: "",
   });
   const [profile, setProfile] = useState("");
-  const { state, dispatch } = useContext(User);
+
+  const { state } = useAuthContext();
+
+  const { postData } = usePost();
+
   const user_id = state.user._id;
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setAbout({ ...about, [name]: value });
@@ -18,41 +22,13 @@ const Profile = () => {
     setProfile(e.target.files[0]);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("about", about.about);
     formData.append("profile", profile);
     formData.append("user_id", user_id);
-    axiosInstance
-      .post("/spuser/profile", formData)
-      .then((res) => {
-        dispatch({ type: "ADD_PROFILE", payload: res.data });
-        toast.success(res.data, {
-          position: "bottom-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          transition: Slide,
-        });
-      })
-      .catch((err) => {
-        toast.error(err, {
-          position: "bottom-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          transition: Slide,
-        });
-      });
+    await postData("/spuser/profile", formData, "ADD_PROFILE");
     setAbout({
       about: "",
     });
@@ -67,7 +43,7 @@ const Profile = () => {
             <form
               className="space-y-4 md:space-y-6"
               onSubmit={handleSubmit}
-              // encType="multipart/form-data"
+              encType="multipart/form-data"
             >
               <div>
                 <label

@@ -1,16 +1,11 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUser,
-  faAt,
-  faLock,
-  faCircleXmark,
-  faCircleCheck,
-} from "@fortawesome/free-solid-svg-icons";
+import { faUser, faAt, faLock } from "@fortawesome/free-solid-svg-icons";
 import { FcGoogle } from "react-icons/fc";
-import { Link, useNavigate } from "react-router-dom";
-import axiosInstance from "../../utils/axiosInstance";
+import { Link } from "react-router-dom";
 import { SERVER_URL } from "../../constants/ServerUrl";
+import { useSignup } from "../../hooks";
+import { ToastContainer } from "react-toastify";
 
 const SignUp = () => {
   const [signupUser, setSignupUser] = useState({
@@ -19,10 +14,7 @@ const SignUp = () => {
     password: "",
   });
 
-  let navigate = useNavigate();
-
-  const [successMsg, setSuccessMsg] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
+  const { signup } = useSignup();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,21 +25,9 @@ const SignUp = () => {
     window.open(`${SERVER_URL}/auth/google/callback`, "_self");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    axiosInstance
-      .post("/user/signup", signupUser)
-      .then((res) => {
-        setSuccessMsg(res.data);
-        setErrorMsg("");
-        navigate("/user/dashboard");
-      })
-      .catch((err) => {
-        setSuccessMsg("");
-        setErrorMsg(err.response.data);
-        navigate("/");
-      });
+    await signup(signupUser);
 
     setSignupUser({
       name: "",
@@ -246,6 +226,7 @@ const SignUp = () => {
               </button>
             </div>
           </form>
+          <ToastContainer />
         </div>
       </div>
       <div className="flex justify-center items-center mt-6">
@@ -258,22 +239,6 @@ const SignUp = () => {
           </Link>
         </span>
       </div>
-      {errorMsg && (
-        <div
-          className="bg-red-100 rounded-lg py-5 px-6 my-4 text-base text-red-700"
-          role="alert"
-        >
-          <FontAwesomeIcon icon={faCircleXmark} /> {errorMsg}
-        </div>
-      )}
-      {successMsg && (
-        <div
-          className="bg-green-100 rounded-lg py-5 px-6 my-4 text-base text-green-700"
-          role="alert"
-        >
-          <FontAwesomeIcon icon={faCircleCheck} /> {successMsg}
-        </div>
-      )}
     </div>
   );
 };
