@@ -1,21 +1,14 @@
-import React, { useEffect, useContext } from "react";
+import React, { useEffect } from "react";
 import { SERVER_URL } from "../../constants/ServerUrl";
-import axiosInstance from "../../utils/axiosInstance";
-import { User } from "../../Context/Context";
+import { useAuthContext, useGet } from "../../hooks";
 
 const Data = () => {
-  const { state, dispatch } = useContext(User);
+  const { state } = useAuthContext();
+  const { getData } = useGet();
   const user_id = state.user._id;
   useEffect(() => {
-    axiosInstance
-      .get(`/spuser/getMedia/${user_id}`)
-      .then((res) => {
-        dispatch({ type: "GET_MEDIA", payload: res.data });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [dispatch, user_id]);
+    getData(`/spuser/getMedia/${user_id}`, "GET_MEDIA");
+  }, [user_id]);
   return (
     <div className="">
       {state.media.map((data) => {

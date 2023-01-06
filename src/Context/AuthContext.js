@@ -1,19 +1,38 @@
 import { createContext, useReducer } from "react";
 import Cookies from "js-cookie";
-export const User = createContext({});
+import { decodeToken } from "react-jwt";
+export const AuthContext = createContext({});
 
 const intialState = {
-  user: Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null,
+  user: Cookies.get("accessToken")
+    ? decodeToken(Cookies.get("accessToken"))
+    : null,
   media: [],
   profile: [],
+  specialUser: [],
 };
 
 const reducer = (state = intialState, action) => {
   switch (action.type) {
-    case "GET_CURRENT_USER":
+    case "SIGN_UP":
       return {
         ...state,
         user: action.payload,
+      };
+    case "SIGN_IN":
+      return {
+        ...state,
+        user: action.payload,
+      };
+    case "ADD_SPECIAL_USER":
+      return {
+        ...state,
+        specialUser: [...state.specialUser, action.payload],
+      };
+    case "GET_SPECIAL_USER":
+      return {
+        ...state,
+        specialUser: action.payload,
       };
     case "ADD_MEDIA":
       return {
@@ -44,8 +63,12 @@ const reducer = (state = intialState, action) => {
   }
 };
 
-export const UserProvider = ({ children }) => {
+export const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, intialState);
 
-  return <User.Provider value={{ state, dispatch }}>{children}</User.Provider>;
+  return (
+    <AuthContext.Provider value={{ state, dispatch }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };

@@ -2,8 +2,11 @@ import React from "react";
 import { Link, Outlet } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { useAuthContext, useLogout } from "../hooks";
 
 const UserLayout = ({ children }) => {
+  const { state } = useAuthContext();
+  const { logout } = useLogout();
   return (
     <section className="flex bg-gray-100 min-h-screen">
       <aside className="hidden sm:flex sm:flex-col">
@@ -159,7 +162,7 @@ const UserLayout = ({ children }) => {
             <button className="relative inline-flex items-center p-2 hover:bg-gray-100 focus:bg-gray-100 rounded-lg">
               <span className="sr-only">User Menu</span>
               <div className="hidden md:flex md:flex-col md:items-end md:leading-tight">
-                {/* <span className="font-semibold">{state.user.fullName}</span> */}
+                <span className="font-semibold">{state.user.name}</span>
               </div>
               <div className="h-12 w-12 ml-2 sm:ml-3 mr-2 bg-gray-100 rounded-full overflow-hidden">
                 {/* <span className="">
@@ -226,7 +229,7 @@ const UserLayout = ({ children }) => {
               </button>
               <button
                 className="relative p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 focus:bg-gray-100 focus:text-gray-600 rounded-full"
-                // onClick={logout}
+                onClick={() => logout("/signin")}
               >
                 <span className="sr-only">Log out</span>
                 <svg

@@ -4,14 +4,15 @@ import {
   AdminLayout,
   NavBar,
   SUserLayout,
-  SUserLoginLayout,
   UserLayout,
 } from "../Layouts";
 import { AdminSignIn, AddUser, Users } from "../pages/Admin";
-import { SignUp, SignIn, Dashboard } from "../pages/User";
-import { SUser, Data, Login, Profile } from "../pages/SUser";
+import { Dashboard } from "../pages/User";
+import { SUser, Data, Profile } from "../pages/SUser";
+import { SignIn, SignUp } from "../pages/Auth";
+import { Navigate } from "react-router-dom";
 
-let routes = [
+const routes = (user) => [
   {
     element: <AdminLoginLayout />,
     children: [{ path: "/admin/signin", element: <AdminSignIn /> }],
@@ -31,7 +32,7 @@ let routes = [
     ],
   },
   {
-    element: <SUserLayout />,
+    element: user ? <SUserLayout /> : <Navigate to="/signin" />,
     children: [
       { path: "/spuser/dashboard", element: <SUser /> },
       { path: "/spuser/dashboard/media", element: <Data /> },
@@ -39,11 +40,7 @@ let routes = [
     ],
   },
   {
-    element: <SUserLoginLayout />,
-    children: [{ path: "/spuser/login", element: <Login /> }],
-  },
-  {
-    element: <UserLayout />,
+    element: user ? <UserLayout /> : <Navigate to="/signin" />,
     children: [{ path: "/user/dashboard", element: <Dashboard /> }],
   },
 ];

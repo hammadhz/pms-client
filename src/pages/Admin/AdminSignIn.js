@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState } from "react";
 import axiosInstance from "../../utils/axiosInstance";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -6,7 +6,7 @@ import {
   faCircleXmark,
   faCircleCheck,
 } from "@fortawesome/free-solid-svg-icons";
-import { User } from "../../Context/Context";
+import { useAuthContext } from "../../hooks";
 import setSession from "../../utils/setSession";
 import { decodeToken } from "react-jwt";
 
@@ -17,7 +17,7 @@ const AdminSignIn = () => {
   });
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
-  const { dispatch } = useContext(User);
+  const { dispatch } = useAuthContext();
 
   let navigate = useNavigate();
 
@@ -32,20 +32,20 @@ const AdminSignIn = () => {
       .then((res) => {
         setErrorMsg("");
         setSuccessMsg(res.data);
-        const user = res.data.user;
         const accessToken = res.data.token;
-        setSession(accessToken, user);
+        setSession(accessToken);
         const myDecode = decodeToken(accessToken);
-        dispatch({ type: "GET_CURRENT_USER", payload: myDecode });
+        dispatch({ type: "SIGN_IN", payload: myDecode });
         navigate("/admin/dashboard");
       })
       .catch((err) => {
         setErrorMsg(err.response.data);
         setSuccessMsg("");
+        console.log(err);
         navigate("/admin/signin");
       });
     setAdminSignIn({
-      email: "",
+      name: "",
       password: "",
     });
   };

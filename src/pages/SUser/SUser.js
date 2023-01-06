@@ -1,7 +1,6 @@
-import React, { useContext, useState, useEffect } from "react";
-import axiosInstance from "../../utils/axiosInstance";
-import { Slide, ToastContainer, toast } from "react-toastify";
-import { User } from "../../Context/Context";
+import React, { useState, useEffect } from "react";
+import { ToastContainer } from "react-toastify";
+import { useAuthContext, usePost, useGet } from "../../hooks";
 
 const SUser = () => {
   const [text, setText] = useState({
@@ -9,7 +8,9 @@ const SUser = () => {
   });
   const [media, setMedia] = useState("");
 
-  const { state, dispatch } = useContext(User);
+  const { state } = useAuthContext();
+  const { postData } = usePost();
+  const { getData } = useGet();
   const user_id = state.user._id;
 
   const handleChange = (e) => {
@@ -20,41 +21,13 @@ const SUser = () => {
     setMedia(e.target.files[0]);
   };
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
     formData.append("text", text.text);
     formData.append("media", media);
     formData.append("user_id", user_id);
-    axiosInstance
-      .post("/spuser/media", formData)
-      .then((res) => {
-        dispatch({ type: "ADD_MEDIA", payload: res.data });
-        toast.success(res.data, {
-          position: "bottom-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          transition: Slide,
-        });
-      })
-      .catch((err) => {
-        toast.error(err, {
-          position: "bottom-center",
-          autoClose: 2000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-          transition: Slide,
-        });
-      });
+    await postData("/spuser/media", formData, "ADD_MEDIA");
     setText({
       text: "",
     });
@@ -62,15 +35,8 @@ const SUser = () => {
   };
 
   useEffect(() => {
-    axiosInstance
-      .get(`/spuser/profile/${user_id}`)
-      .then((res) => {
-        dispatch({ type: "GET_PROFILE", payload: res.data });
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [dispatch, user_id]);
+    getData(`/spuser/profile/${user_id}`, "GET_PROFILE");
+  }, [user_id]);
   return (
     <div>
       <div>

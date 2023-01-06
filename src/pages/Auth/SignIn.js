@@ -1,26 +1,18 @@
 import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faAt,
-  faLock,
-  faCircleXmark,
-  faCircleCheck,
-} from "@fortawesome/free-solid-svg-icons";
-import { Link, useNavigate } from "react-router-dom";
-import axiosInstance from "../../utils/axiosInstance";
+import { faAt, faLock } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router-dom";
 import { FcGoogle } from "react-icons/fc";
 import { SERVER_URL } from "../../constants/ServerUrl";
+import { ToastContainer } from "react-toastify";
+import { useSignin } from "../../hooks";
 
 const SignIn = () => {
   const [signinUser, setSigninUser] = useState({
     email: "",
     password: "",
   });
-
-  let navigate = useNavigate();
-
-  const [successMsg, setSuccessMsg] = useState("");
-  const [errorMsg, setErrorMsg] = useState("");
+  const { signin } = useSignin();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -31,20 +23,9 @@ const SignIn = () => {
     window.open(`${SERVER_URL}/auth/google/callback`, "_self");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    axiosInstance
-      .post("/user/signin", signinUser)
-      .then((res) => {
-        setErrorMsg("");
-        setSuccessMsg(res.data);
-        navigate("/user/dashboard");
-      })
-      .catch((err) => {
-        setErrorMsg(err.response.data);
-        setSuccessMsg("");
-        navigate("/signin");
-      });
+    await signin(signinUser);
     setSigninUser({
       email: "",
       password: "",
@@ -201,6 +182,7 @@ const SignIn = () => {
               </button>
             </div>
           </form>
+          <ToastContainer />
         </div>
       </div>
       <div className="flex justify-center items-center mt-6">
@@ -213,22 +195,6 @@ const SignIn = () => {
           </Link>
         </span>
       </div>
-      {errorMsg && (
-        <div
-          className="bg-red-100 rounded-lg py-5 px-6 my-4 text-base text-red-700"
-          role="alert"
-        >
-          <FontAwesomeIcon icon={faCircleXmark} /> {errorMsg}
-        </div>
-      )}
-      {successMsg && (
-        <div
-          className="bg-green-100 rounded-lg py-5 px-6 my-4 text-base text-green-700"
-          role="alert"
-        >
-          <FontAwesomeIcon icon={faCircleCheck} /> {successMsg}
-        </div>
-      )}
     </div>
   );
 };

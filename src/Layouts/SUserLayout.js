@@ -1,19 +1,13 @@
-import React, { useContext } from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import React from "react";
+import { Link, Outlet } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCheckCircle, faUser } from "@fortawesome/free-solid-svg-icons";
-import { User } from "../Context/Context";
 import { SERVER_URL } from "../constants/ServerUrl";
-import setSession from "../utils/setSession";
+import { useAuthContext, useLogout } from "../hooks";
 
 const SUserLayout = ({ children }) => {
-  const { state, dispatch } = useContext(User);
-  const navigate = useNavigate();
-  const logout = () => {
-    dispatch({ type: "LOGOUT" });
-    setSession();
-    navigate("/spuser/login");
-  };
+  const { state } = useAuthContext();
+  const { logout } = useLogout();
   return (
     <section className="flex bg-gray-100 min-h-screen">
       <aside className="hidden sm:flex sm:flex-col">
@@ -79,7 +73,7 @@ const SUserLayout = ({ children }) => {
               <FontAwesomeIcon icon={faUser} />
             </Link>
             <Link
-              href="/#"
+              to="/#"
               className="inline-flex items-center justify-center py-3 hover:text-gray-400 hover:bg-gray-700 focus:text-gray-400 focus:bg-gray-700 rounded-lg"
             >
               <span className="sr-only">Folders</span>
@@ -169,19 +163,21 @@ const SUserLayout = ({ children }) => {
             <button className="relative inline-flex items-center p-2 hover:bg-gray-100 focus:bg-gray-100 rounded-lg">
               <span className="sr-only">User Menu</span>
               <div className="hidden md:flex md:flex-col md:items-end md:leading-tight">
-                <span className="font-semibold">{state.user.fullName}</span>
+                <span className="font-semibold">{state.user.name}</span>
               </div>
               <div className="h-12 w-12 ml-2 sm:ml-3 mr-2 bg-gray-100 rounded-full overflow-hidden">
                 <span className="">
-                  {state.profile.length > 0 ? (
+                  {state.profile ? (
                     <>
                       {state.profile.map((data) => {
                         return (
-                          <img
-                            src={`${SERVER_URL}/${data.profile}`}
-                            alt="user profile"
-                            className="h-full w-full object-cover"
-                          />
+                          <React.Fragment key={data._id}>
+                            <img
+                              src={`${SERVER_URL}/${data.profile}`}
+                              alt="user profile"
+                              className="h-full w-full object-cover"
+                            />
+                          </React.Fragment>
                         );
                       })}
                     </>
@@ -236,7 +232,7 @@ const SUserLayout = ({ children }) => {
               </button>
               <button
                 className="relative p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-600 focus:bg-gray-100 focus:text-gray-600 rounded-full"
-                onClick={logout}
+                onClick={() => logout("/signin")}
               >
                 <span className="sr-only">Log out</span>
                 <svg

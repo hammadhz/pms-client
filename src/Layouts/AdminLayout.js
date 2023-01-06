@@ -1,16 +1,9 @@
-import { Link, Outlet, useNavigate } from "react-router-dom";
-import { User } from "../Context/Context";
-import { useContext } from "react";
-import setSession from "../utils/setSession";
+import { Link, Outlet } from "react-router-dom";
+import { useAuthContext, useLogout } from "../hooks";
 
 const AdminLayout = ({ children }) => {
-  const { state, dispatch } = useContext(User);
-  const navigate = useNavigate();
-  const logout = () => {
-    dispatch({ type: "LOGOUT" });
-    setSession();
-    navigate("/admin/signin");
-  };
+  const { state } = useAuthContext();
+  const { logout } = useLogout();
   return (
     <div>
       <div className="antialiased bg-black w-full min-h-screen text-slate-300 relative py-4">
@@ -103,7 +96,7 @@ const AdminLayout = ({ children }) => {
               </Link>
               <div className="hover:bg-white/10 transition duration-150 ease-linear rounded-lg py-3 px-2 group">
                 <div className="flex flex-col space-y-2 md:flex-row md:space-y-0 space-x-2 items-center">
-                  <div onClick={logout}>
+                  <div onClick={() => logout("/admin/signin")}>
                     {" "}
                     <svg
                       aria-hidden="true"

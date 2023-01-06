@@ -4,15 +4,15 @@ import "./style/index.css";
 import App from "./App";
 import { BrowserRouter } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import { UserProvider } from "./Context/Context";
+import { AuthProvider } from "./Context/AuthContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <UserProvider>
+      <AuthProvider>
         <App />
-      </UserProvider>
+      </AuthProvider>
     </BrowserRouter>
   </React.StrictMode>
 );
