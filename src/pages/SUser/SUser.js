@@ -77,6 +77,7 @@ const SUser = () => {
               placeholder="Write Text"
               maxLength="500"
               name="text"
+              required
               onChange={handleChange}
             ></textarea>
           </div>
